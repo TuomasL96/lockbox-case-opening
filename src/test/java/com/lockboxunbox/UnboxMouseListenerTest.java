@@ -9,8 +9,12 @@ import java.awt.Component;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Constructor;
 import java.util.Collections;
 import java.util.Random;
+import net.runelite.client.config.RuneLiteConfig;
+import net.runelite.client.input.MouseAdapter;
+import net.runelite.client.input.MouseManager;
 import org.junit.Test;
 
 public class UnboxMouseListenerTest
@@ -27,6 +31,13 @@ public class UnboxMouseListenerTest
 		{
 		};
 		return new MouseEvent(source, id, 0, 0, point.x, point.y, 1, false, MouseEvent.BUTTON1);
+	}
+
+	private static MouseManager newMouseManager() throws Exception
+	{
+		Constructor<MouseManager> constructor = MouseManager.class.getDeclaredConstructor(RuneLiteConfig.class);
+		constructor.setAccessible(true);
+		return constructor.newInstance((RuneLiteConfig) null);
 	}
 
 	private final UnboxController controller = new UnboxController(new Random(1));
@@ -104,5 +115,30 @@ public class UnboxMouseListenerTest
 		MouseEvent press = event(MouseEvent.MOUSE_PRESSED, INSIDE);
 		listener.mousePressed(press);
 		assertFalse(press.isConsumed());
+	}
+
+	@Test
+	public void runsAfterStretchedModeHasTranslatedTheClick() throws Exception
+	{
+		Point stretched = new Point(1300, 700);
+		Point real = new Point(650, 350);
+		MouseManager mouseManager = newMouseManager();
+		mouseManager.registerMouseListener(0, new MouseAdapter()
+		{
+			@Override
+			public MouseEvent mousePressed(MouseEvent event)
+			{
+				return event(MouseEvent.MOUSE_PRESSED, real);
+			}
+		});
+		Rectangle coverAtRealPosition = new Rectangle(600, 300, 100, 100);
+		UnboxMouseListener stretchedListener =
+			new UnboxMouseListener(controller, () -> PANEL, () -> coverAtRealPosition, Runnable::run);
+		controller.openClicked(Collections.emptyMap(), System.nanoTime(), 6, 4);
+
+		UnboxMouseListener.register(mouseManager, stretchedListener);
+		MouseEvent result = mouseManager.processMousePressed(event(MouseEvent.MOUSE_PRESSED, stretched));
+
+		assertTrue(result.isConsumed());
 	}
 }

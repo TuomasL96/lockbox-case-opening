@@ -223,7 +223,7 @@ public class LockboxUnboxPlugin extends Plugin
 	{
 		if (!mouseListenerRegistered && controller.isActive())
 		{
-			mouseManager.registerMouseListener(0, mouseListener);
+			UnboxMouseListener.register(mouseManager, mouseListener);
 			mouseListenerRegistered = true;
 		}
 	}

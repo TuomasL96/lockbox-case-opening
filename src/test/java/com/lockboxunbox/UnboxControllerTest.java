@@ -213,4 +213,21 @@ public class UnboxControllerTest
 		controller.close();
 		assertFalse(controller.isActive());
 	}
+
+	@Test
+	public void gainBeforeTheBoxIsConsumedIsNotCountedAsLoot()
+	{
+		controller.openClicked(inv(BOX, 1), 0, 6, 4);
+		controller.inventoryChanged(inv(BOX, 1, ItemID.COINS, 1000), SECOND / 4);
+		controller.inventoryChanged(inv(ItemID.COINS, 234333), SECOND / 2);
+		assertEquals(new Loot(ItemID.COINS, 233333, Tier.VERY_RARE), controller.animation().winner());
+	}
+
+	@Test
+	public void twoBoxesConsumedAtOnceCloseWithoutAResult()
+	{
+		controller.openClicked(inv(BOX, 3), 0, 6, 4);
+		controller.inventoryChanged(inv(BOX, 1, ItemID.DRAGON_DART, 125, ItemID.OATHPLATE_HELM, 1), SECOND / 2);
+		assertFalse(controller.isActive());
+	}
 }

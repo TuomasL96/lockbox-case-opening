@@ -35,7 +35,8 @@ public class InventoryCoverOverlay extends Overlay
 		this.controller = controller;
 		setPosition(OverlayPosition.DYNAMIC);
 		setLayer(OverlayLayer.ALWAYS_ON_TOP);
-		setPriority(Overlay.PRIORITY_HIGHEST);
+		// Below the panel, which can overlap the inventory in small windows.
+		setPriority(Overlay.PRIORITY_HIGH);
 	}
 
 	/**

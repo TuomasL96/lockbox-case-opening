@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import net.runelite.client.input.MouseAdapter;
+import net.runelite.client.input.MouseManager;
 
 /**
  * Closes the animation on a click outside the panel. Only registered while an
@@ -29,6 +30,15 @@ public class UnboxMouseListener extends MouseAdapter
 		this.panel = panel;
 		this.cover = cover;
 		this.clientThread = clientThread;
+	}
+
+	/**
+	 * Adds the listener at the end of the list, after stretched mode's listener
+	 * has translated the click into the coordinates the overlays draw in.
+	 */
+	static void register(MouseManager mouseManager, UnboxMouseListener listener)
+	{
+		mouseManager.registerMouseListener(listener);
 	}
 
 	static ClickAction decide(Point point, Rectangle panel, Rectangle cover, ReelAnimation.Phase phase)

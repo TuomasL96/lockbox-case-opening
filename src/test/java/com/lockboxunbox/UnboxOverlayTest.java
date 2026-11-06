@@ -20,4 +20,13 @@ public class UnboxOverlayTest
 		Rectangle panel = UnboxOverlay.panelBounds(300, 150);
 		assertTrue(new Rectangle(20, 20, 260, 110).contains(panel));
 	}
+
+	@Test
+	public void panelDrawsOverTheInventoryCover()
+	{
+		UnboxController controller = new UnboxController();
+		UnboxOverlay panel = new UnboxOverlay(null, null, controller, null);
+		InventoryCoverOverlay cover = new InventoryCoverOverlay(null, controller);
+		assertTrue(cover.getPriority() < panel.getPriority());
+	}
 }

@@ -53,13 +53,21 @@ public class UnboxController
 	public void inventoryChanged(Map<Integer, Integer> after, long nowNanos)
 	{
 		ReelAnimation current = animation;
-		if (current == null || practice || current.hasWinner() || !LootDiff.boxConsumed(before, after))
+		if (current == null || practice || current.hasWinner())
 		{
 			return;
 		}
-		Loot loot = LootDiff.gained(before, after).orElse(null);
-		if (loot == null)
+		int consumed = LootDiff.boxesConsumed(before, after);
+		if (consumed == 0)
 		{
+			// Keeps anything gained while waiting from being counted as loot.
+			before = after;
+			return;
+		}
+		Loot loot = LootDiff.gained(before, after).orElse(null);
+		if (consumed > 1 || loot == null)
+		{
+			// Two results can't be told apart, and the reel must never guess.
 			close();
 			return;
 		}
