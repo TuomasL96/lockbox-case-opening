@@ -124,10 +124,10 @@ public class LockboxUnboxPlugin extends Plugin
 	 */
 	public void requestPractice()
 	{
-		startPractice(DropTable.roll(random));
+		startPractice(DropTable.roll(random), false);
 	}
 
-	void startPractice(Loot loot)
+	void startPractice(Loot loot, boolean showCover)
 	{
 		clientThread.invoke(() ->
 		{
@@ -135,7 +135,7 @@ public class LockboxUnboxPlugin extends Plugin
 			{
 				return;
 			}
-			controller.startPractice(loot, System.nanoTime(), config.spinSeconds(), config.revealSeconds());
+			controller.startPractice(loot, System.nanoTime(), config.spinSeconds(), config.revealSeconds(), showCover);
 			registerMouseListener();
 		});
 	}

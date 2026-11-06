@@ -230,4 +230,44 @@ public class UnboxControllerTest
 		controller.inventoryChanged(inv(BOX, 1, ItemID.DRAGON_DART, 125, ItemID.OATHPLATE_HELM, 1), SECOND / 2);
 		assertFalse(controller.isActive());
 	}
+
+	@Test
+	public void realOpenShowsTheCoverUntilTheReelStops()
+	{
+		open(0);
+		assertTrue(controller.coverVisible(SECOND));
+		receiveDarts(0);
+		assertFalse(controller.coverVisible(7 * SECOND));
+	}
+
+	@Test
+	public void practiceHasNoCoverByDefault()
+	{
+		controller.startPractice(DARTS, 0, 6, 4);
+		assertFalse(controller.coverVisible(SECOND));
+	}
+
+	@Test
+	public void practiceCanAskForTheCover()
+	{
+		controller.startPractice(DARTS, 0, 6, 4, true);
+		assertTrue(controller.isPractice());
+		assertTrue(controller.coverVisible(SECOND));
+		assertFalse(controller.coverVisible(7 * SECOND));
+	}
+
+	@Test
+	public void coverRequestDoesNotCarryIntoTheNextPractice()
+	{
+		controller.startPractice(DARTS, 0, 6, 4, true);
+		controller.close();
+		controller.startPractice(DARTS, 0, 6, 4);
+		assertFalse(controller.coverVisible(SECOND));
+	}
+
+	@Test
+	public void idleHasNoCover()
+	{
+		assertFalse(controller.coverVisible(SECOND));
+	}
 }

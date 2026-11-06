@@ -19,6 +19,7 @@ public class UnboxController
 
 	private volatile ReelAnimation animation;
 	private volatile boolean practice;
+	private volatile boolean practiceCover;
 	private Map<Integer, Integer> before;
 	private int ticksWaited;
 
@@ -47,6 +48,7 @@ public class UnboxController
 		this.before = before;
 		ticksWaited = 0;
 		practice = false;
+		practiceCover = false;
 		animation = new ReelAnimation(random, nowNanos, spinSeconds, revealSeconds);
 	}
 
@@ -90,6 +92,15 @@ public class UnboxController
 
 	public void startPractice(Loot loot, long nowNanos, int spinSeconds, int revealSeconds)
 	{
+		startPractice(loot, nowNanos, spinSeconds, revealSeconds, false);
+	}
+
+	/**
+	 * Starts a practice spin, optionally with the inventory cover a real open
+	 * would show.
+	 */
+	public void startPractice(Loot loot, long nowNanos, int spinSeconds, int revealSeconds, boolean showCover)
+	{
 		if (animation != null)
 		{
 			return;
@@ -97,6 +108,7 @@ public class UnboxController
 		ReelAnimation reel = new ReelAnimation(random, nowNanos, spinSeconds, revealSeconds);
 		reel.setWinner(loot, nowNanos);
 		practice = true;
+		practiceCover = showCover;
 		animation = reel;
 	}
 
@@ -113,6 +125,7 @@ public class UnboxController
 	{
 		animation = null;
 		practice = false;
+		practiceCover = false;
 		before = null;
 	}
 
@@ -131,6 +144,15 @@ public class UnboxController
 	public ReelAnimation animation()
 	{
 		return animation;
+	}
+
+	/**
+	 * True while the inventory should be covered. Safe to call from any thread.
+	 */
+	public boolean coverVisible(long nowNanos)
+	{
+		ReelAnimation current = animation;
+		return current != null && (!practice || practiceCover) && current.coverVisible(nowNanos);
 	}
 
 	public boolean isPractice()

@@ -44,6 +44,11 @@ Run the client with the plugin loaded:
 ./gradlew run
 ```
 
-To test the gold reveal, type `::unboxgold` in the chatbox. This command exists only in the developer build.
+The developer build adds a **Lockbox Unbox (dev)** side panel with two test buttons, both with the inventory cover on:
+
+- **Spin with inventory cover**: a spin using the real odds.
+- **Simulate Oathplate drop**: a spin that lands on Oathplate.
+
+Neither exists in the shipped plugin.
 
 Run the tests with `./gradlew test`.

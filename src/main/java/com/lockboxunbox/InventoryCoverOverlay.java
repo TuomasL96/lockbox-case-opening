@@ -50,8 +50,7 @@ public class InventoryCoverOverlay extends Overlay
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
-		ReelAnimation reel = controller.animation();
-		if (reel == null || controller.isPractice() || !reel.coverVisible(System.nanoTime()))
+		if (!controller.coverVisible(System.nanoTime()))
 		{
 			bounds = null;
 			return null;
