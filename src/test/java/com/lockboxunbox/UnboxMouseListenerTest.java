@@ -5,11 +5,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import com.google.inject.Guice;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.lang.reflect.Constructor;
 import java.util.Collections;
 import java.util.Random;
 import net.runelite.client.config.RuneLiteConfig;
@@ -33,11 +33,13 @@ public class UnboxMouseListenerTest
 		return new MouseEvent(source, id, 0, 0, point.x, point.y, 1, false, MouseEvent.BUTTON1);
 	}
 
-	private static MouseManager newMouseManager() throws Exception
+	private static MouseManager newMouseManager()
 	{
-		Constructor<MouseManager> constructor = MouseManager.class.getDeclaredConstructor(RuneLiteConfig.class);
-		constructor.setAccessible(true);
-		return constructor.newInstance((RuneLiteConfig) null);
+		RuneLiteConfig config = new RuneLiteConfig()
+		{
+		};
+		return Guice.createInjector(binder -> binder.bind(RuneLiteConfig.class).toInstance(config))
+			.getInstance(MouseManager.class);
 	}
 
 	private final UnboxController controller = new UnboxController(new Random(1));
@@ -118,7 +120,7 @@ public class UnboxMouseListenerTest
 	}
 
 	@Test
-	public void runsAfterStretchedModeHasTranslatedTheClick() throws Exception
+	public void runsAfterStretchedModeHasTranslatedTheClick()
 	{
 		Point stretched = new Point(1300, 700);
 		Point real = new Point(650, 350);

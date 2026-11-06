@@ -71,7 +71,8 @@ public class LockboxUnboxPlugin extends Plugin
 	private UnboxMouseListener mouseListener;
 	private PracticeSpinPanel panel;
 	private NavigationButton navigationButton;
-	private boolean mouseListenerRegistered;
+	private volatile boolean mouseListenerRegistered;
+	private volatile boolean running;
 
 	@Provides
 	LockboxUnboxConfig provideConfig(ConfigManager configManager)
@@ -91,6 +92,7 @@ public class LockboxUnboxPlugin extends Plugin
 	@Override
 	protected void startUp()
 	{
+		running = true;
 		mouseListener = new UnboxMouseListener(controller, unboxOverlay::bounds, coverOverlay::bounds, clientThread::invoke);
 		overlayManager.add(unboxOverlay);
 		overlayManager.add(coverOverlay);
@@ -110,7 +112,8 @@ public class LockboxUnboxPlugin extends Plugin
 	@Override
 	protected void shutDown()
 	{
-		controller.close();
+		running = false;
+		clientThread.invoke(() -> controller.close());
 		unregisterMouseListener();
 		overlayManager.remove(unboxOverlay);
 		overlayManager.remove(coverOverlay);
@@ -136,7 +139,7 @@ public class LockboxUnboxPlugin extends Plugin
 	{
 		clientThread.invoke(() ->
 		{
-			if (client.getGameState() != GameState.LOGGED_IN)
+			if (!running || client.getGameState() != GameState.LOGGED_IN)
 			{
 				return;
 			}
