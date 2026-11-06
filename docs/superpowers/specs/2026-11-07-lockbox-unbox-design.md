@@ -1,5 +1,9 @@
 # Lockbox Unbox: design
 
+> **Update:** Practice Spin (simulate mode) and the developer test buttons were
+> removed from `main` so the plugin can go to the Plugin Hub. They live on the
+> `developer` branch. Sections below that mention them describe that branch.
+
 A RuneLite Plugin Hub plugin that turns opening a Forgotten lockbox (Yama loot)
 into a horizontal case-opening reel, in the style of CS2, landing on the loot the
 player really received.

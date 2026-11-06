@@ -30,8 +30,6 @@ import net.runelite.client.util.QuantityFormatter;
 @Singleton
 public class UnboxOverlay extends Overlay
 {
-	static final String SIMULATION_BANNER = "SIMULATION – no items awarded";
-
 	private static final String TITLE = "FORGOTTEN LOCKBOX";
 	private static final int MAX_WIDTH = 720;
 	private static final int MAX_HEIGHT = 190;
@@ -48,7 +46,6 @@ public class UnboxOverlay extends Overlay
 	private static final Color PANEL_COLOR = new Color(0x16171B);
 	private static final Color PANEL_EDGE = new Color(0x3A3C44);
 	private static final Color TILE_COLOR = new Color(0x26282E);
-	private static final Color BANNER_COLOR = new Color(0x8A1C1C);
 	private static final Color MARKER_COLOR = new Color(0xFFD700);
 
 	private final Client client;
@@ -130,19 +127,9 @@ public class UnboxOverlay extends Overlay
 		graphics.drawRoundRect(panel.x, panel.y, panel.width, panel.height, 12, 12);
 	}
 
-	private void drawHeader(Graphics2D graphics, Rectangle panel)
+	private static void drawHeader(Graphics2D graphics, Rectangle panel)
 	{
-		int baseline = panel.y + 22;
-		if (controller.isPractice())
-		{
-			graphics.setColor(BANNER_COLOR);
-			graphics.fillRoundRect(panel.x + 8, panel.y + 6, panel.width - 16, HEADER_HEIGHT - 10, 6, 6);
-			drawCentered(graphics, SIMULATION_BANNER, panel.x + panel.width / 2, baseline, Color.WHITE);
-		}
-		else
-		{
-			drawCentered(graphics, TITLE, panel.x + panel.width / 2, baseline, Color.WHITE);
-		}
+		drawCentered(graphics, TITLE, panel.x + panel.width / 2, panel.y + 22, Color.WHITE);
 	}
 
 	private void drawReel(Graphics2D graphics, Rectangle panel, ReelAnimation reel, double position,

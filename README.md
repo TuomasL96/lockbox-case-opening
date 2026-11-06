@@ -20,10 +20,6 @@ A RuneLite plugin that turns opening a Forgotten lockbox into an unboxing moment
 | Very rare | Coins |
 | Legendary | Oathplate helm, chest, legs |
 
-## Practice Spin
-
-The Lockbox Unbox side panel has a **Practice Spin** button that plays the reel using the real odds. It's visual only: no items are awarded, and a "SIMULATION – no items awarded" banner stays on the panel the whole time.
-
 ## Settings
 
 | Setting | Default | Notes |
@@ -43,12 +39,5 @@ Run the client with the plugin loaded:
 ```
 ./gradlew run
 ```
-
-The developer build adds two test buttons to the Lockbox Unbox side panel, both with the inventory cover on:
-
-- **Spin with inventory cover**: a spin using the real odds.
-- **Simulate Oathplate drop**: a spin that lands on Oathplate.
-
-Neither exists in the shipped plugin.
 
 Run the tests with `./gradlew test`.

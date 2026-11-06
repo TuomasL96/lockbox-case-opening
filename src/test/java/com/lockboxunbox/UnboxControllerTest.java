@@ -18,7 +18,6 @@ public class UnboxControllerTest
 	private static final long SECOND = 1_000_000_000L;
 	private static final int BOX = DropTable.LOCKBOX_ID;
 	private static final Loot DARTS = new Loot(ItemID.DRAGON_DART, 125, Tier.COMMON);
-	private static final Loot HELM = new Loot(ItemID.OATHPLATE_HELM, 1, Tier.LEGENDARY);
 
 	private final UnboxController controller = new UnboxController(new Random(1));
 
@@ -47,7 +46,6 @@ public class UnboxControllerTest
 	{
 		open(0);
 		assertTrue(controller.isActive());
-		assertFalse(controller.isPractice());
 		assertFalse(controller.animation().hasWinner());
 		assertEquals(ReelAnimation.Phase.SPINNING, controller.animation().phase(SECOND));
 	}
@@ -125,46 +123,6 @@ public class UnboxControllerTest
 	}
 
 	@Test
-	public void realOpenReplacesPractice()
-	{
-		controller.startPractice(DARTS, 0, 6, 4);
-		open(SECOND);
-		assertFalse(controller.isPractice());
-		assertFalse(controller.animation().hasWinner());
-	}
-
-	@Test
-	public void practiceIgnoredWhileActive()
-	{
-		open(0);
-		ReelAnimation first = controller.animation();
-		controller.startPractice(DARTS, SECOND, 6, 4);
-		assertSame(first, controller.animation());
-		assertFalse(controller.isPractice());
-	}
-
-	@Test
-	public void practiceHasWinnerAtOnceAndNeverTimesOut()
-	{
-		controller.startPractice(DARTS, 0, 6, 4);
-		assertEquals(DARTS, controller.animation().winner());
-		assertTrue(controller.isPractice());
-		for (int i = 0; i < 100; i++)
-		{
-			controller.gameTick();
-		}
-		assertTrue(controller.isActive());
-	}
-
-	@Test
-	public void practiceIgnoresInventoryChanges()
-	{
-		controller.startPractice(HELM, 0, 6, 4);
-		receiveDarts(SECOND);
-		assertEquals(HELM, controller.animation().winner());
-	}
-
-	@Test
 	public void staleCloseDoesNotKillNewAnimation()
 	{
 		open(0);
@@ -208,7 +166,8 @@ public class UnboxControllerTest
 		controller.close();
 		assertFalse(controller.isActive());
 
-		controller.startPractice(HELM, 0, 6, 4);
+		open(0);
+		controller.inventoryChanged(inv(ItemID.SHARK, 3, ItemID.OATHPLATE_HELM, 1), 0);
 		assertEquals(ReelAnimation.Phase.REVEAL, controller.animation().phase(60 * SECOND));
 		controller.close();
 		assertFalse(controller.isActive());
@@ -238,31 +197,6 @@ public class UnboxControllerTest
 		assertTrue(controller.coverVisible(SECOND));
 		receiveDarts(0);
 		assertFalse(controller.coverVisible(7 * SECOND));
-	}
-
-	@Test
-	public void practiceHasNoCoverByDefault()
-	{
-		controller.startPractice(DARTS, 0, 6, 4);
-		assertFalse(controller.coverVisible(SECOND));
-	}
-
-	@Test
-	public void practiceCanAskForTheCover()
-	{
-		controller.startPractice(DARTS, 0, 6, 4, true);
-		assertTrue(controller.isPractice());
-		assertTrue(controller.coverVisible(SECOND));
-		assertFalse(controller.coverVisible(7 * SECOND));
-	}
-
-	@Test
-	public void coverRequestDoesNotCarryIntoTheNextPractice()
-	{
-		controller.startPractice(DARTS, 0, 6, 4, true);
-		controller.close();
-		controller.startPractice(DARTS, 0, 6, 4);
-		assertFalse(controller.coverVisible(SECOND));
 	}
 
 	@Test
