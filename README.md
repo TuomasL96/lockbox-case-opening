@@ -44,7 +44,7 @@ Run the client with the plugin loaded:
 ./gradlew run
 ```
 
-The developer build adds a **Lockbox Unbox (dev)** side panel with two test buttons, both with the inventory cover on:
+The developer build adds two test buttons to the Lockbox Unbox side panel, both with the inventory cover on:
 
 - **Spin with inventory cover**: a spin using the real odds.
 - **Simulate Oathplate drop**: a spin that lands on Oathplate.

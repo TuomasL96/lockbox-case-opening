@@ -119,6 +119,11 @@ public class LockboxUnboxPlugin extends Plugin
 		panel = null;
 	}
 
+	PracticeSpinPanel panel()
+	{
+		return panel;
+	}
+
 	/**
 	 * Starts a Practice Spin using the real odds. Safe to call from any thread.
 	 */

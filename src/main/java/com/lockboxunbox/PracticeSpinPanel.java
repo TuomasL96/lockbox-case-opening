@@ -1,6 +1,7 @@
 package com.lockboxunbox;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -15,6 +16,7 @@ import net.runelite.client.ui.PluginPanel;
 public class PracticeSpinPanel extends PluginPanel
 {
 	private final JButton button = new JButton("Practice Spin");
+	private final JPanel buttons = new JPanel(new GridLayout(0, 1, 0, 8));
 
 	public PracticeSpinPanel(Runnable onPractice)
 	{
@@ -33,8 +35,20 @@ public class PracticeSpinPanel extends PluginPanel
 		button.setFocusable(false);
 		button.addActionListener(event -> onPractice.run());
 
+		buttons.setBackground(ColorScheme.DARK_GRAY_COLOR);
+		buttons.add(button);
+
 		add(text, BorderLayout.NORTH);
-		add(button, BorderLayout.CENTER);
+		add(buttons, BorderLayout.CENTER);
+	}
+
+	/**
+	 * The panel's button stack. Lets the developer build add its test buttons to
+	 * this tab. The shipped plugin only ever shows Practice Spin here.
+	 */
+	JPanel buttonList()
+	{
+		return buttons;
 	}
 
 	public void setLoggedIn(boolean loggedIn)
