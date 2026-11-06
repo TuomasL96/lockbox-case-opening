@@ -39,9 +39,6 @@ tasks.register('run', JavaExec) {
 
 	jvmArgs "-ea"
 	args "--developer-mode", "--debug"
-	if (System.getProperty('lockbox.force') != null) {
-		systemProperty 'lockbox.force', System.getProperty('lockbox.force')
-	}
 }
 
 tasks.register('shadowJar', Jar) {

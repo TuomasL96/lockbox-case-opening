@@ -4,14 +4,14 @@ import net.runelite.client.RuneLite;
 import net.runelite.client.externalplugins.ExternalPluginManager;
 
 /**
- * Developer launcher. Run with -Dlockbox.force=gold to force an Oathplate
- * result in Practice Spin.
+ * Developer launcher. Also loads a dev-only plugin that adds the ::unboxgold
+ * command, which forces an Oathplate result.
  */
 public class LockboxUnboxPluginTest
 {
 	public static void main(String[] args) throws Exception
 	{
-		ExternalPluginManager.loadBuiltin(DevLockboxUnboxPlugin.class);
+		ExternalPluginManager.loadBuiltin(LockboxUnboxPlugin.class, DevForceGoldPlugin.class);
 		RuneLite.main(args);
 	}
 }

@@ -120,17 +120,14 @@ public class LockboxUnboxPlugin extends Plugin
 	}
 
 	/**
-	 * Rolls the Practice Spin result using the real odds.
-	 */
-	protected Loot rollPractice()
-	{
-		return DropTable.roll(random);
-	}
-
-	/**
-	 * Starts a Practice Spin. Safe to call from any thread.
+	 * Starts a Practice Spin using the real odds. Safe to call from any thread.
 	 */
 	public void requestPractice()
+	{
+		startPractice(DropTable.roll(random));
+	}
+
+	void startPractice(Loot loot)
 	{
 		clientThread.invoke(() ->
 		{
@@ -138,7 +135,7 @@ public class LockboxUnboxPlugin extends Plugin
 			{
 				return;
 			}
-			controller.startPractice(rollPractice(), System.nanoTime(), config.spinSeconds(), config.revealSeconds());
+			controller.startPractice(loot, System.nanoTime(), config.spinSeconds(), config.revealSeconds());
 			registerMouseListener();
 		});
 	}

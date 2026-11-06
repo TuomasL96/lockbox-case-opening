@@ -44,10 +44,6 @@ Run the client with the plugin loaded:
 ./gradlew run
 ```
 
-To force an Oathplate result in Practice Spin while developing, which is only possible in this developer build:
-
-```
-./gradlew run -Dlockbox.force=gold
-```
+To test the gold reveal, type `::unboxgold` in the chatbox. This command exists only in the developer build.
 
 Run the tests with `./gradlew test`.
