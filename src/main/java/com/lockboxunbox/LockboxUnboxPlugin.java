@@ -10,12 +10,15 @@ import net.runelite.api.Hitsplat;
 import net.runelite.api.HitsplatID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
+import net.runelite.api.events.BeforeRender;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.HitsplatApplied;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.MenuOptionClicked;
+import net.runelite.api.gameval.InterfaceID;
 import net.runelite.api.gameval.InventoryID;
+import net.runelite.api.widgets.Widget;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -32,6 +35,12 @@ import net.runelite.client.ui.overlay.OverlayManager;
 public class LockboxUnboxPlugin extends Plugin
 {
 	private static final String OPEN_OPTION = "Open";
+
+	private static final int[] RESULT_POPUPS = {
+		InterfaceID.Objectbox.UNIVERSE,
+		InterfaceID.ObjectboxDouble.UNIVERSE,
+		InterfaceID.Messagebox.UNIVERSE,
+	};
 
 	@Inject
 	private Client client;
@@ -115,6 +124,27 @@ public class LockboxUnboxPlugin extends Plugin
 		if (event.getContainerId() == InventoryID.INV)
 		{
 			controller.inventoryChanged(itemCounts(event.getItemContainer()), System.nanoTime());
+		}
+	}
+
+	/**
+	 * Hides the game's own result popup in the chatbox while the reel runs, so
+	 * it can't show the loot early.
+	 */
+	@Subscribe
+	public void onBeforeRender(BeforeRender event)
+	{
+		if (!controller.isActive())
+		{
+			return;
+		}
+		for (int component : RESULT_POPUPS)
+		{
+			Widget widget = client.getWidget(component);
+			if (widget != null && !widget.isHidden())
+			{
+				widget.setHidden(true);
+			}
 		}
 	}
 
