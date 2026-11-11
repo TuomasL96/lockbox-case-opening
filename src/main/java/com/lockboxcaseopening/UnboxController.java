@@ -18,6 +18,8 @@ public class UnboxController
 	private final Random random;
 
 	private volatile ReelAnimation animation;
+	private volatile boolean practice;
+	private volatile boolean practiceCover;
 	private Map<Integer, Integer> before;
 	private int ticksWaited;
 
@@ -33,25 +35,27 @@ public class UnboxController
 	}
 
 	/**
-	 * Starts an unboxing. A spin in progress is left alone, but a reveal gives
-	 * way to it.
+	 * Starts a real unboxing. A real spin in progress is left alone. Anything
+	 * else (a practice spin, or a reveal) gives way to it.
 	 */
 	public void openClicked(Map<Integer, Integer> before, long nowNanos, int spinSeconds, int revealSeconds)
 	{
 		ReelAnimation current = animation;
-		if (current != null && current.coverVisible(nowNanos))
+		if (current != null && !practice && current.coverVisible(nowNanos))
 		{
 			return;
 		}
 		this.before = before;
 		ticksWaited = 0;
+		practice = false;
+		practiceCover = false;
 		animation = new ReelAnimation(random, nowNanos, spinSeconds, revealSeconds);
 	}
 
 	public void inventoryChanged(Map<Integer, Integer> after, long nowNanos)
 	{
 		ReelAnimation current = animation;
-		if (current == null || current.hasWinner())
+		if (current == null || practice || current.hasWinner())
 		{
 			return;
 		}
@@ -75,7 +79,7 @@ public class UnboxController
 	public void gameTick()
 	{
 		ReelAnimation current = animation;
-		if (current == null || current.hasWinner())
+		if (current == null || practice || current.hasWinner())
 		{
 			return;
 		}
@@ -84,6 +88,28 @@ public class UnboxController
 		{
 			close();
 		}
+	}
+
+	public void startPractice(Loot loot, long nowNanos, int spinSeconds, int revealSeconds)
+	{
+		startPractice(loot, nowNanos, spinSeconds, revealSeconds, false);
+	}
+
+	/**
+	 * Starts a practice spin, optionally with the inventory cover a real open
+	 * would show.
+	 */
+	public void startPractice(Loot loot, long nowNanos, int spinSeconds, int revealSeconds, boolean showCover)
+	{
+		if (animation != null)
+		{
+			return;
+		}
+		ReelAnimation reel = new ReelAnimation(random, nowNanos, spinSeconds, revealSeconds);
+		reel.setWinner(loot, nowNanos);
+		practice = true;
+		practiceCover = showCover;
+		animation = reel;
 	}
 
 	public void update(long nowNanos)
@@ -98,6 +124,8 @@ public class UnboxController
 	public void close()
 	{
 		animation = null;
+		practice = false;
+		practiceCover = false;
 		before = null;
 	}
 
@@ -124,7 +152,12 @@ public class UnboxController
 	public boolean coverVisible(long nowNanos)
 	{
 		ReelAnimation current = animation;
-		return current != null && current.coverVisible(nowNanos);
+		return current != null && (!practice || practiceCover) && current.coverVisible(nowNanos);
+	}
+
+	public boolean isPractice()
+	{
+		return practice;
 	}
 
 	public boolean isActive()

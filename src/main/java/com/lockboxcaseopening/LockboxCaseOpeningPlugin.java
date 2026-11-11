@@ -1,11 +1,14 @@
 package com.lockboxcaseopening;
 
 import com.google.inject.Provides;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import javax.inject.Inject;
+import javax.swing.SwingUtilities;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.Hitsplat;
@@ -27,7 +30,10 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.MouseManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.ui.ClientToolbar;
+import net.runelite.client.ui.NavigationButton;
 import net.runelite.client.ui.overlay.OverlayManager;
+import net.runelite.client.util.ImageUtil;
 
 @PluginDescriptor(
 	name = "Lockbox Case Opening",
@@ -51,6 +57,9 @@ public class LockboxCaseOpeningPlugin extends Plugin
 	private ClientThread clientThread;
 
 	@Inject
+	private ClientToolbar clientToolbar;
+
+	@Inject
 	private MouseManager mouseManager;
 
 	@Inject
@@ -71,8 +80,13 @@ public class LockboxCaseOpeningPlugin extends Plugin
 	// Only touched on the client thread.
 	private final List<Widget> hiddenPopups = new ArrayList<>();
 
+	private final Random random = new Random();
+
 	private UnboxMouseListener mouseListener;
+	private PracticeSpinPanel panel;
+	private NavigationButton navigationButton;
 	private volatile boolean mouseListenerRegistered;
+	private volatile boolean running;
 
 	@Provides
 	LockboxCaseOpeningConfig provideConfig(ConfigManager configManager)
@@ -92,14 +106,27 @@ public class LockboxCaseOpeningPlugin extends Plugin
 	@Override
 	protected void startUp()
 	{
+		running = true;
 		mouseListener = new UnboxMouseListener(controller, unboxOverlay::bounds, coverOverlay::bounds, clientThread::invoke);
 		overlayManager.add(unboxOverlay);
 		overlayManager.add(coverOverlay);
+
+		panel = new PracticeSpinPanel(this::requestPractice);
+		panel.setLoggedIn(client.getGameState() == GameState.LOGGED_IN);
+		BufferedImage icon = ImageUtil.loadImageResource(LockboxCaseOpeningPlugin.class, "panel_icon.png");
+		navigationButton = NavigationButton.builder()
+			.tooltip("Lockbox Case Opening")
+			.icon(icon)
+			.priority(10)
+			.panel(panel)
+			.build();
+		clientToolbar.addNavigation(navigationButton);
 	}
 
 	@Override
 	protected void shutDown()
 	{
+		running = false;
 		clientThread.invoke(() ->
 		{
 			controller.close();
@@ -108,6 +135,35 @@ public class LockboxCaseOpeningPlugin extends Plugin
 		unregisterMouseListener();
 		overlayManager.remove(unboxOverlay);
 		overlayManager.remove(coverOverlay);
+		clientToolbar.removeNavigation(navigationButton);
+		navigationButton = null;
+		panel = null;
+	}
+
+	PracticeSpinPanel panel()
+	{
+		return panel;
+	}
+
+	/**
+	 * Starts a Practice Spin using the real odds. Safe to call from any thread.
+	 */
+	public void requestPractice()
+	{
+		startPractice(DropTable.roll(random), false);
+	}
+
+	void startPractice(Loot loot, boolean showCover)
+	{
+		clientThread.invoke(() ->
+		{
+			if (!running || client.getGameState() != GameState.LOGGED_IN)
+			{
+				return;
+			}
+			controller.startPractice(loot, System.nanoTime(), config.spinSeconds(), config.revealSeconds(), showCover);
+			registerMouseListener();
+		});
 	}
 
 	@Subscribe
@@ -202,11 +258,20 @@ public class LockboxCaseOpeningPlugin extends Plugin
 	@Subscribe
 	public void onGameStateChanged(GameStateChanged event)
 	{
-		if (endsSession(event.getGameState()))
+		GameState state = event.getGameState();
+		if (endsSession(state))
 		{
 			controller.close();
 			unregisterMouseListener();
 		}
+		boolean loggedIn = state == GameState.LOGGED_IN;
+		SwingUtilities.invokeLater(() ->
+		{
+			if (panel != null)
+			{
+				panel.setLoggedIn(loggedIn);
+			}
+		});
 	}
 
 	private static Map<Integer, Integer> itemCounts(ItemContainer container)
