@@ -13,7 +13,7 @@ repositories {
 }
 
 def runeLiteVersion = 'latest.release'
-def pluginMainClass = 'com.lockboxunbox.LockboxUnboxPluginTest'
+def pluginMainClass = 'com.lockboxcaseopening.LockboxCaseOpeningPluginTest'
 
 dependencies {
 	compileOnly group: 'net.runelite', name:'client', version: runeLiteVersion
@@ -26,7 +26,7 @@ dependencies {
 	testImplementation group: 'net.runelite', name:'jshell', version: runeLiteVersion
 }
 
-group = 'com.lockboxunbox'
+group = 'com.lockboxcaseopening'
 
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'

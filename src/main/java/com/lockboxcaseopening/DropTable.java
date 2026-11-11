@@ -1,4 +1,4 @@
-package com.lockboxunbox;
+package com.lockboxcaseopening;
 
 import java.util.Random;
 import net.runelite.api.gameval.ItemID;

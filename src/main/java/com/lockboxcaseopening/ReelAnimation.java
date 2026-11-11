@@ -1,4 +1,4 @@
-package com.lockboxunbox;
+package com.lockboxcaseopening;
 
 import java.util.HashMap;
 import java.util.Map;

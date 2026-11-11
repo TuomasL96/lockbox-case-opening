@@ -1,8 +1,8 @@
 <img src="icon.png" width="48" height="48" alt="">
 
-# Lockbox Unbox
+# Lockbox Case Opening
 
-A RuneLite plugin that turns opening a Forgotten lockbox into an unboxing moment. Click **Open** and a reel spins in the middle of your screen, then lands on the loot you really received.
+A RuneLite plugin that turns opening a Forgotten lockbox into a case opening. Click **Open** and a reel spins in the middle of your screen, then lands on the loot you really received.
 
 ## How it works
 

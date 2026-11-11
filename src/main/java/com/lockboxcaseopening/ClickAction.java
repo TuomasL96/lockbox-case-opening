@@ -1,4 +1,4 @@
-package com.lockboxunbox;
+package com.lockboxcaseopening;
 
 /**
  * What a mouse press does while the animation is showing.

@@ -1,4 +1,4 @@
-package com.lockboxunbox;
+package com.lockboxcaseopening;
 
 import com.google.inject.Provides;
 import java.util.ArrayList;
@@ -30,11 +30,11 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
 
 @PluginDescriptor(
-	name = "Lockbox Unbox",
-	description = "Plays an unboxing reel when you open a Forgotten lockbox",
-	tags = {"yama", "lockbox", "oathplate", "unboxing", "animation"}
+	name = "Lockbox Case Opening",
+	description = "Plays a case opening reel when you open a Forgotten lockbox",
+	tags = {"yama", "lockbox", "forgotten", "oathplate", "case opening", "reel", "unboxing", "animation"}
 )
-public class LockboxUnboxPlugin extends Plugin
+public class LockboxCaseOpeningPlugin extends Plugin
 {
 	private static final String OPEN_OPTION = "Open";
 
@@ -57,7 +57,7 @@ public class LockboxUnboxPlugin extends Plugin
 	private OverlayManager overlayManager;
 
 	@Inject
-	private LockboxUnboxConfig config;
+	private LockboxCaseOpeningConfig config;
 
 	@Inject
 	private UnboxController controller;
@@ -75,9 +75,9 @@ public class LockboxUnboxPlugin extends Plugin
 	private volatile boolean mouseListenerRegistered;
 
 	@Provides
-	LockboxUnboxConfig provideConfig(ConfigManager configManager)
+	LockboxCaseOpeningConfig provideConfig(ConfigManager configManager)
 	{
-		return configManager.getConfig(LockboxUnboxConfig.class);
+		return configManager.getConfig(LockboxCaseOpeningConfig.class);
 	}
 
 	/**

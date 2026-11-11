@@ -1,4 +1,4 @@
-package com.lockboxunbox;
+package com.lockboxcaseopening;
 
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
@@ -6,8 +6,8 @@ import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.Range;
 import net.runelite.client.config.Units;
 
-@ConfigGroup("lockboxunbox")
-public interface LockboxUnboxConfig extends Config
+@ConfigGroup("lockboxcaseopening")
+public interface LockboxCaseOpeningConfig extends Config
 {
 	@Range(min = 3, max = 10)
 	@Units(Units.SECONDS)

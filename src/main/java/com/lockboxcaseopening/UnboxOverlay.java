@@ -1,4 +1,4 @@
-package com.lockboxunbox;
+package com.lockboxcaseopening;
 
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
@@ -52,7 +52,7 @@ public class UnboxOverlay extends Overlay
 	private final Client client;
 	private final ItemManager itemManager;
 	private final UnboxController controller;
-	private final LockboxUnboxConfig config;
+	private final LockboxCaseOpeningConfig config;
 
 	private volatile Rectangle bounds;
 	private ReelAnimation soundAnimation;
@@ -61,7 +61,7 @@ public class UnboxOverlay extends Overlay
 	private boolean stopSoundPlayed;
 
 	@Inject
-	public UnboxOverlay(Client client, ItemManager itemManager, UnboxController controller, LockboxUnboxConfig config)
+	public UnboxOverlay(Client client, ItemManager itemManager, UnboxController controller, LockboxCaseOpeningConfig config)
 	{
 		this.client = client;
 		this.itemManager = itemManager;

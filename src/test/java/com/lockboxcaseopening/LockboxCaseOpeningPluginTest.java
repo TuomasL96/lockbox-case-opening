@@ -1,4 +1,4 @@
-package com.lockboxunbox;
+package com.lockboxcaseopening;
 
 import net.runelite.client.RuneLite;
 import net.runelite.client.externalplugins.ExternalPluginManager;
@@ -6,11 +6,11 @@ import net.runelite.client.externalplugins.ExternalPluginManager;
 /**
  * Developer launcher.
  */
-public class LockboxUnboxPluginTest
+public class LockboxCaseOpeningPluginTest
 {
 	public static void main(String[] args) throws Exception
 	{
-		ExternalPluginManager.loadBuiltin(LockboxUnboxPlugin.class);
+		ExternalPluginManager.loadBuiltin(LockboxCaseOpeningPlugin.class);
 		RuneLite.main(args);
 	}
 }
