@@ -7,10 +7,13 @@ A RuneLite plugin that turns opening a Forgotten lockbox into a case opening. Cl
 ## How it works
 
 - The reel starts on your click and slows down once the loot reaches your inventory, so it always shows your real result.
-- Your inventory is covered until the reel stops, so the result isn't spoiled.
+- Your inventory is covered until the reel stops, and the game's chatbox result popup is hidden until the panel closes, so the result isn't spoiled.
+- The other tiles on the reel are random picks from the drop table, there for decoration.
 - Tiles are coloured by drop chance, from blue through purple, pink and red.
 - Oathplate pieces appear as a gold star and are revealed when the reel stops.
 - Clicking outside the panel closes it straight away, and so does taking damage.
+- Clicks on the panel and on the covered inventory are blocked, so you can't misclick an item you can't see.
+- If the plugin can't tell what you received, the panel closes without showing a result. It never guesses.
 
 | Tier | Items |
 |---|---|
@@ -30,7 +33,9 @@ A RuneLite plugin that turns opening a Forgotten lockbox into a case opening. Cl
 
 ## Fair play
 
-The plugin only draws on your screen. It adds no menu options, sends nothing to the game server, makes no network requests, and can't predict loot: it learns the result from your inventory, after the game has given it to you.
+The plugin is cosmetic. It draws the reel and the inventory cover, hides the chatbox result popup while the panel is open and then shows it again, and blocks clicks on the panel and the covered inventory.
+
+It adds no menu options, sends nothing to the game server, makes no network requests, and can't predict loot: it learns the result from your inventory, after the game has given it to you.
 
 ## Development
 
