@@ -13,11 +13,6 @@ public final class LootDiff
 	{
 	}
 
-	public static boolean boxConsumed(Map<Integer, Integer> before, Map<Integer, Integer> after)
-	{
-		return boxesConsumed(before, after) > 0;
-	}
-
 	public static int boxesConsumed(Map<Integer, Integer> before, Map<Integer, Integer> after)
 	{
 		return Math.max(0, count(before, DropTable.LOCKBOX_ID) - count(after, DropTable.LOCKBOX_ID));

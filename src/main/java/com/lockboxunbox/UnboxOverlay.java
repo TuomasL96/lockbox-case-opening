@@ -3,6 +3,7 @@ package com.lockboxunbox;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -249,7 +250,7 @@ public class UnboxOverlay extends Overlay
 			return;
 		}
 		float strength = (float) (0.5 * (1 - since / GOLD_FLASH_SECONDS));
-		java.awt.Composite old = graphics.getComposite();
+		Composite old = graphics.getComposite();
 		graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, strength));
 		graphics.setColor(Tier.LEGENDARY.color());
 		graphics.fillRoundRect(panel.x, panel.y, panel.width, panel.height, 12, 12);

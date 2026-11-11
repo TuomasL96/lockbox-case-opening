@@ -1,8 +1,6 @@
 package com.lockboxunbox;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,14 +41,14 @@ public class LootDiffTest
 	{
 		Map<Integer, Integer> before = inv(BOX, 5);
 		Map<Integer, Integer> after = inv(BOX, 4, ItemID.COINS, 233333);
-		assertTrue(LootDiff.boxConsumed(before, after));
+		assertEquals(1, LootDiff.boxesConsumed(before, after));
 		assertEquals(new Loot(ItemID.COINS, 233333, Tier.VERY_RARE), LootDiff.gained(before, after).get());
 	}
 
 	@Test
 	public void boxStillThereIsNotConsumed()
 	{
-		assertFalse(LootDiff.boxConsumed(inv(BOX, 1, ItemID.SHARK, 3), inv(BOX, 1, ItemID.SHARK, 2)));
+		assertEquals(0, LootDiff.boxesConsumed(inv(BOX, 1, ItemID.SHARK, 3), inv(BOX, 1, ItemID.SHARK, 2)));
 	}
 
 	@Test
