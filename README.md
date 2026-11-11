@@ -37,12 +37,3 @@ The plugin is cosmetic. It draws the reel and the inventory cover, hides the cha
 
 It adds no menu options, sends nothing to the game server, makes no network requests, and can't predict loot: it learns the result from your inventory, after the game has given it to you.
 
-## Development
-
-Run the client with the plugin loaded:
-
-```
-./gradlew run
-```
-
-Run the tests with `./gradlew test`.
