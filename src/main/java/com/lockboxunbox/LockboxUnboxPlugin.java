@@ -1,7 +1,9 @@
 package com.lockboxunbox;
 
 import com.google.inject.Provides;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import net.runelite.api.Client;
@@ -66,6 +68,9 @@ public class LockboxUnboxPlugin extends Plugin
 	@Inject
 	private InventoryCoverOverlay coverOverlay;
 
+	// Only touched on the client thread.
+	private final List<Widget> hiddenPopups = new ArrayList<>();
+
 	private UnboxMouseListener mouseListener;
 	private volatile boolean mouseListenerRegistered;
 
@@ -95,7 +100,11 @@ public class LockboxUnboxPlugin extends Plugin
 	@Override
 	protected void shutDown()
 	{
-		clientThread.invoke(() -> controller.close());
+		clientThread.invoke(() ->
+		{
+			controller.close();
+			restorePopups();
+		});
 		unregisterMouseListener();
 		overlayManager.remove(unboxOverlay);
 		overlayManager.remove(coverOverlay);
@@ -129,23 +138,44 @@ public class LockboxUnboxPlugin extends Plugin
 
 	/**
 	 * Hides the game's own result popup in the chatbox while the reel runs, so
-	 * it can't show the loot early.
+	 * it can't show the loot early, and brings it back once the reel is gone.
 	 */
 	@Subscribe
 	public void onBeforeRender(BeforeRender event)
 	{
-		if (!controller.isActive())
+		if (controller.isActive())
 		{
-			return;
+			hidePopups();
 		}
+		else
+		{
+			restorePopups();
+		}
+	}
+
+	private void hidePopups()
+	{
 		for (int component : RESULT_POPUPS)
 		{
 			Widget widget = client.getWidget(component);
 			if (widget != null && !widget.isHidden())
 			{
 				widget.setHidden(true);
+				hiddenPopups.add(widget);
 			}
 		}
+	}
+
+	/**
+	 * Shows only the popups this plugin hid, never one the game hid itself.
+	 */
+	private void restorePopups()
+	{
+		for (Widget widget : hiddenPopups)
+		{
+			widget.setHidden(false);
+		}
+		hiddenPopups.clear();
 	}
 
 	@Subscribe
