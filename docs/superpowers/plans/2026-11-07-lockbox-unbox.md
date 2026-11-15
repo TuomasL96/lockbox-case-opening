@@ -12,6 +12,15 @@
 
 ## Global Constraints
 
+- Development-only functionality must always stay on `developer`, never on
+  `main` or in Plugin Hub releases. This includes Practice Spin / simulated
+  wheel spins, forced loot or gold results, developer panels and test buttons,
+  and manual simulation launchers. All tasks below involving these features
+  apply only to `developer`.
+- Preserve these tools when bringing production fixes into `developer`. Before
+  promoting changes to `main`, review the diff and exclude their code, controls,
+  configuration, and wiring; hiding controls is not sufficient. Ordinary
+  automated tests for production behavior may remain on `main`.
 - Never add menu entries, call `client.menuAction`, or otherwise send actions to the server.
 - Never hide, move or resize game widgets.
 - No network calls, reflection or third-party dependencies beyond the example-plugin template.

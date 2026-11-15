@@ -4,6 +4,20 @@
 > removed from `main` so the plugin can go to the Plugin Hub. They live on the
 > `developer` branch. Sections below that mention them describe that branch.
 
+## Permanent branch policy
+
+- Development-only functionality must always stay on `developer` and must not
+  be merged or cherry-picked into `main` or included in Plugin Hub releases.
+- This includes Practice Spin / simulated wheel spins, forced loot or gold
+  results, developer panels and test buttons, and manual simulation launchers.
+- Keep these tools on `developer` when bringing production fixes into that
+  branch. When promoting changes to `main`, exclude development-only code,
+  controls, configuration, and wiring; hiding a button is not sufficient.
+- Review the branch diff before promoting changes to ensure this separation.
+  Ordinary automated tests for production behavior are not development tools
+  and may remain on `main`.
+- This policy takes precedence over historical implementation details below.
+
 A RuneLite Plugin Hub plugin that turns opening a Forgotten lockbox (Yama loot)
 into a horizontal case-opening reel, in the style of CS2, landing on the loot the
 player really received.
@@ -58,11 +72,8 @@ lockbox, ID 30763 (per the OSRS Wiki).
 **Hub requirements:** public repo, BSD 2-Clause licence,
 `runelite-plugin.properties`, `icon.png` no larger than 48x72 at the repo root.
 
-**Rule risk on simulate mode.** RuneLite's rejected list includes "Plugins that
-simulate content for any purpose", with Quest Helper's Leviathan simulation as
-the example. The user has decided to keep simulate mode and considers it within
-the rules. Reviewers have the final say, so it stays self-contained and easy to
-remove.
+**Simulate mode is development-only.** Keep it on `developer` under the permanent
+branch policy above. It must not be included in `main` or Plugin Hub releases.
 
 ## Approaches
 
